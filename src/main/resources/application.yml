@@ -1,0 +1,51 @@
+# Postgressql local config
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/${db.name}
+    username: ${db.user}
+    password: ${db.pass}
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
+  mail:
+    host: smtp.mailtrap.io
+    username: 74c3720ec6fd0a
+    password: 38eb6679679df4
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          port: 587
+          auth: true
+          starttls:
+            enable: true
+            required: true
+#    host: ${mail.host}
+#    port: ${mail.port}
+#    username: ${mail.username}
+#    password: ${mail.password}
+#    protocol: ${mail.protocol}
+
+# Postgressql heroku DB local App
+#spring:
+#  datasource:
+#    url: jdbc:postgresql://localhost:5433/${db.name}
+#    username: ${db.user}
+#    password: ${db.pass}
+
+## postgres heroku hosting
+#spring:
+#  datasource:
+#    url: ${JDBC_DATABASE_URL}
+#    username: ${JDBC_DATABASE_USERNAME}
+#    password: ${JDBC_DATABASE_PASSWORD}
