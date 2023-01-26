@@ -1,5 +1,6 @@
 package pl.finansepal.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,13 +21,14 @@ public class ExpanseController {
 
     @PostMapping
     public ResponseEntity<ExpenseDTO> createExpense(@RequestBody ExpenseDTO expenseDTO){
+
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(expenseService.save(expenseDTO));
+                .body(expenseService.create(expenseDTO));
     }
 
     @GetMapping
     public ResponseEntity<List<ExpenseDTO>> getAllExpenses (){
-        return ResponseEntity.status(HttpStatus.OK).body(expenseService.getAll());
+        return ResponseEntity.status(HttpStatus.OK).body(expenseService.list());
     }
 
 }

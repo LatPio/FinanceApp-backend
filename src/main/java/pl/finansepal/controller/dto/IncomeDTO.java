@@ -11,11 +11,13 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ExpenseDTO {
+public class IncomeDTO {
+
     private Long id;
     private BigDecimal amount;
     private String currency;
     private String name;
     private String tags;
     private UserDTO user;
+
 }

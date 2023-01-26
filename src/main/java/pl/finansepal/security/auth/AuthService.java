@@ -1,14 +1,17 @@
 package pl.finansepal.security.auth;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import pl.finansepal.security.model.AuthenticationResponse;
-import pl.finansepal.security.model.LoginRequest;
-import pl.finansepal.security.model.RegisterRequest;
+import pl.finansepal.repository.RefreshTokenRepository;
+import pl.finansepal.security.model.*;
 import pl.finansepal.exeption.AppRuntimeException;
 import pl.finansepal.model.NotificationEmail;
 import pl.finansepal.model.User;
@@ -31,6 +34,8 @@ public class AuthService {
     private final VerificationTokenRepository verificationTokenRepository;
     private final MailService mailService;
     private final AuthenticationManager authenticationManager;
+    private final RefreshTokenService refreshTokenService;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     public void signup(RegisterRequest request){
         var user = User.builder()
@@ -90,6 +95,34 @@ public class AuthService {
 //        return new AuthenticationResponse(token, loginRequest.getUsername());
         return AuthenticationResponse.builder()
                 .token(jwtToken)
+                .refreshToken(refreshTokenService.generateRefreshToken(user.getEmail()).getToken())
+                .expiresAt(Instant.now().plusMillis(jwtService.getJwtExpirationInMillis()))
+                .build();
+    }
+
+    public User getCurrentUser(){
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        String authenticationHeader = request.getHeader("Authorization");
+//        String authenticationHeader = principal.getEmail();
+//        String jwtToken;
+//        String userEmail;
+//        jwtToken = authenticationHeader.substring(7);
+//        userEmail = jwtService.extractUsername(jwtToken);
+//        User user = userRepository.findByEmail(userEmail).orElse(null);
+        return principal;
+    }
+
+    public AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+        refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
+        RefreshToken byToken = refreshTokenRepository.findByToken(refreshTokenRequest.getRefreshToken()).orElseThrow();
+        var user = userRepository.findByEmail(byToken.getEmail())
+                .orElseThrow( () -> new AppRuntimeException("User not found - " + refreshTokenRequest.getEmail()));
+        var jwtToken = jwtService.generateToken(user);
+
+        return AuthenticationResponse.builder()
+                .token(jwtToken)
+                .refreshToken(refreshTokenRequest.getRefreshToken())
+                .expiresAt(Instant.now().plusMillis(jwtService.getJwtExpirationInMillis()))
                 .build();
     }
 }

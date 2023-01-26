@@ -1,54 +1,76 @@
 package pl.finansepal.service;
 
+import io.jsonwebtoken.Jwts;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.mapstruct.factory.Mappers;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pl.finansepal.controller.dto.ExpenseDTO;
+import pl.finansepal.controller.mapper.ExpenseMapper;
+import pl.finansepal.controller.mapper.UserMapper;
 import pl.finansepal.model.Expense;
+import pl.finansepal.model.User;
 import pl.finansepal.repository.ExpenseRepository;
+import pl.finansepal.repository.UserRepository;
+import pl.finansepal.security.auth.AuthService;
+import pl.finansepal.security.auth.JwtService;
+import pl.finansepal.service.common.CrudService;
+import pl.finansepal.utils.AppUtilities;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static pl.finansepal.service.ExpenseSpecification.belongToUser;
+
 @Service
 @AllArgsConstructor
 @Slf4j
-public class ExpenseService {
+public class ExpenseService implements CrudService<ExpenseDTO, Long> {
 
     private final ExpenseRepository expenseRepository;
+    private final ExpenseMapper expenseMapper = Mappers.getMapper(ExpenseMapper.class);
+    private final UserMapper userMapper = Mappers.getMapper(UserMapper.class);
+    private final JwtService jwtService;
+    private final AuthService authService;
+    private final AppUtilities utilities;
+    private final UserRepository userRepository;
 
-    public ExpenseDTO save (ExpenseDTO expenseDTO){
-        Expense expense = expenseRepository.save(mapExpenseDto(expenseDTO));
-        expense.setId(expense.getId());
-        return expenseDTO;
-    }
 
-    private Expense mapExpenseDto(ExpenseDTO expenseDTO) {
-        return Expense.builder()
-                .name(expenseDTO.getName())
-                .amount(expenseDTO.getAmount())
-                .currency(expenseDTO.getCurrency())
-                .name(expenseDTO.getName())
-                .tags(expenseDTO.getTags())
-                .owner(expenseDTO.getOwner())
-                .build();
-    }
-
-    public List<ExpenseDTO> getAll() {
-        return expenseRepository.findAll()
+    public List<ExpenseDTO> list() {
+        return expenseRepository.findAll(belongToUser(authService.getCurrentUser()))   //authService.getCurrentUser()
                 .stream()
-                .map(this::mapToDto)
+                .map(expenseMapper::map)
                 .collect(Collectors.toList());
     }
 
-    private ExpenseDTO mapToDto(Expense expense) {
-        return ExpenseDTO.builder()
-                .id(expense.getId())
-                .amount(expense.getAmount())
-                .currency(expense.getCurrency())
-                .name(expense.getName())
-                .owner(expense.getOwner())
-                .tags(expense.getTags())
-                .build();
+    public ExpenseDTO get(Long id) {
+        return expenseRepository.findById(id)
+                .map(expense -> expenseMapper.map(expense))
+                .orElse(null);
+    }
+
+    public ExpenseDTO create(ExpenseDTO expenseDTO) {
+        expenseDTO.setId(null);
+        expenseDTO.setUser(userMapper.map(authService.getCurrentUser()));
+        Expense created = expenseRepository.save(expenseMapper.map(expenseDTO));
+        return expenseMapper.map(created);
+    }
+
+    public ExpenseDTO update(ExpenseDTO expenseDTO) {
+        ExpenseDTO existing = get(expenseDTO.getId());
+        if(existing == null){
+            return null;
+        }
+        expenseDTO.setUser(userMapper.map(authService.getCurrentUser()));
+        Expense updated = expenseRepository.save(expenseMapper.map(expenseDTO));
+        return expenseMapper.map(updated);
+
+    }
+
+    public void delete(Long id) {
+        expenseRepository.deleteById(id);
     }
 }

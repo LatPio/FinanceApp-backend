@@ -1,4 +1,4 @@
-package pl.finansepal.config;
+package pl.finansepal.security.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

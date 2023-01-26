@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -21,16 +23,26 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue
+    @Column(name = "ID")
     private Long id;
+    @Column(name = "UserName")
     private String userName;
+    @Column(name = "FirstName")
     private String firstName;
+    @Column(name = "LastName")
     private String lastName;
+    @Column(name = "Password")
     private String password;
 
-    @Column(unique = true)
+    @Column(name = "Email",unique = true)
     private String email;
+    @Column(name = "Enabled")
     private boolean enabled;
+    @CreationTimestamp
+    @Column(name = "CreationDate", updatable = false)
     private Instant createdAt;
+    @UpdateTimestamp
+    @Column(name = "UpdateDate")
     private Instant updateAt;
 
     @Override
