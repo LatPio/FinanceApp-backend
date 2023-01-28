@@ -33,7 +33,7 @@ public class IncomeService implements CrudService<IncomeDTO, Long> {
 
     @Override
     public List<IncomeDTO> list() {
-        return incomeRepository.findAll(belongToUser(authService.getCurrentUser()))
+        return incomeRepository.findAll(belongToUser(authService.getCurrentUser()))//
                 .stream()
                 .map(incomeMapper::map)
                 .collect(Collectors.toList());

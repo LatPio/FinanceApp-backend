@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import pl.finansepal.model.Income;
 
 @Repository
-public interface IncomeRepository extends JpaRepository<Income, Long>, JpaSpecificationExecutor<Income> {
+public interface IncomeRepository extends JpaRepository<Income, Long> , JpaSpecificationExecutor<Income>{ //
 }
