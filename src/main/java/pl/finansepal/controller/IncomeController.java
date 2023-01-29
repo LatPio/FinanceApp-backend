@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.finansepal.controller.dto.IncomeDTO;
+import pl.finansepal.model.SearchCriteria;
 import pl.finansepal.service.IncomeService;
 
 import java.util.List;
@@ -25,13 +26,13 @@ public class IncomeController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<IncomeDTO>> getAll (){
-        return ResponseEntity.status(HttpStatus.OK).body(incomeService.list());
+    public ResponseEntity<List<IncomeDTO>> getAll (@RequestBody(required = false) List<SearchCriteria> searchCriteria){
+        return ResponseEntity.status(HttpStatus.OK).body(incomeService.list(searchCriteria));
     }
 
     @GetMapping
     public ResponseEntity<IncomeDTO> get(@RequestParam Long id){
-        return ResponseEntity.status(HttpStatus.FOUND).body(incomeService.get(id));
+        return ResponseEntity.status(HttpStatus.OK).body(incomeService.get(id));
     }
 
     @PutMapping

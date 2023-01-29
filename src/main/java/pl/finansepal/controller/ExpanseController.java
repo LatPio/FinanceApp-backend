@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.finansepal.controller.dto.ExpenseDTO;
 import pl.finansepal.controller.dto.IncomeDTO;
+import pl.finansepal.model.SearchCriteria;
 import pl.finansepal.service.ExpenseService;
 
 import java.util.List;
@@ -27,10 +28,12 @@ public class ExpanseController {
                 .body(expenseService.create(expenseDTO));
     }
 
-    @GetMapping("/list")
-    public ResponseEntity<List<ExpenseDTO>> getAll (){
-        return ResponseEntity.status(HttpStatus.OK).body(expenseService.list());
+    @GetMapping(path = "/list")
+    public ResponseEntity<List<ExpenseDTO>> getAll (@RequestBody(required = false) List<SearchCriteria> searchCriteria){
+        return ResponseEntity.status(HttpStatus.OK).body(expenseService.list(searchCriteria));
     }
+
+
 
     @GetMapping
     public ResponseEntity<ExpenseDTO> get(@RequestParam Long id){

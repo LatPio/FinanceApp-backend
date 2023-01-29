@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -17,7 +18,7 @@ public class IncomeDTO {
     private BigDecimal amount;
     private String currency;
     private String name;
-    private String tags;
+    private List<TagDTO> tags;
     private UserDTO user;
 
 }

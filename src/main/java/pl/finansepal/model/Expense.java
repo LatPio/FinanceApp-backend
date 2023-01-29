@@ -7,6 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 
 @Data
 @Entity
@@ -27,7 +28,8 @@ public class Expense {
     @Column(name = "Name")
     private String name;
     @Column (name = "Tags")
-    private String tags;
+    @OneToMany(mappedBy = "id")
+    private List<Tag> tags;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

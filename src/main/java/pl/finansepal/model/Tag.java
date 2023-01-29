@@ -1,6 +1,5 @@
 package pl.finansepal.model;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,30 +8,21 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.Date;
-import java.util.List;
 
 @Data
 @Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Income {
-
+public class Tag {
     @Id
     @GeneratedValue
     @Column(name = "ID")
     private Long id;
-    @Column(name = "Amount")
-    private BigDecimal amount;
-    @Column(name = "Currency")
-    private String currency;
     @Column(name = "Name")
     private String name;
-    @OneToMany(mappedBy = "id")
-    private List<Tag> tags;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -42,5 +32,4 @@ public class Income {
     @UpdateTimestamp
     @Column(name = "UpdateDate")
     private Instant updateAt;
-
 }

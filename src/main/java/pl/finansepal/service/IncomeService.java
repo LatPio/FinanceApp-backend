@@ -8,20 +8,23 @@ import pl.finansepal.controller.dto.IncomeDTO;
 import pl.finansepal.controller.mapper.IncomeMapper;
 import pl.finansepal.controller.mapper.UserMapper;
 import pl.finansepal.model.Income;
+import pl.finansepal.model.SearchCriteria;
 import pl.finansepal.repository.IncomeRepository;
 import pl.finansepal.security.auth.AuthService;
 import pl.finansepal.service.common.CrudService;
+import pl.finansepal.service.specification.ExpenseSpecification;
+import pl.finansepal.service.specification.IncomeSpecification;
 
-import java.lang.annotation.IncompleteAnnotationException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static pl.finansepal.service.IncomeSpecification.*;
+import static org.springframework.data.jpa.domain.Specification.where;
+import static pl.finansepal.service.specification.IncomeSpecification.*;
 
 @Service
 @AllArgsConstructor
 @Slf4j
-public class IncomeService implements CrudService<IncomeDTO, Long> {
+public class IncomeService  { //implements CrudService<IncomeDTO, Long>
 
     private final IncomeRepository incomeRepository;
 
@@ -31,22 +34,32 @@ public class IncomeService implements CrudService<IncomeDTO, Long> {
 
 
 
-    @Override
-    public List<IncomeDTO> list() {
-        return incomeRepository.findAll(belongToUser(authService.getCurrentUser()))//
-                .stream()
-                .map(incomeMapper::map)
-                .collect(Collectors.toList());
+
+    public List<IncomeDTO> list(List<SearchCriteria> searchCriteriaList) {
+        if (searchCriteriaList == null) {
+            return incomeRepository.findAll(belongToUser(authService.getCurrentUser()))//
+                    .stream()
+                    .map(incomeMapper::map)
+                    .collect(Collectors.toList());
+        } else {
+            IncomeSpecification spec = new IncomeSpecification();
+            searchCriteriaList.stream().forEach(searchCriteria -> spec.add(searchCriteria));
+            return incomeRepository.findAll(where(spec).and(belongToUser(authService.getCurrentUser())))//
+                    .stream()
+                    .map(incomeMapper::map)
+                    .collect(Collectors.toList());
+        }
+
     }
 
-    @Override
+
     public IncomeDTO get(Long aLong) {
-        return incomeRepository.findById(aLong)
+        return incomeRepository.findByIdAndUser(aLong, authService.getCurrentUser())
                 .map(income -> incomeMapper.map(income))
                 .orElse(null);
     }
 
-    @Override
+
     public IncomeDTO create(IncomeDTO incomeDTO) {
         incomeDTO.setId(null);
         incomeDTO.setUser(userMapper.map(authService.getCurrentUser()));
@@ -54,7 +67,7 @@ public class IncomeService implements CrudService<IncomeDTO, Long> {
         return incomeMapper.map(created);
     }
 
-    @Override
+
     public IncomeDTO update(IncomeDTO incomeDTO) {
         IncomeDTO existing = get(incomeDTO.getId());
         if(existing == null){
@@ -66,8 +79,8 @@ public class IncomeService implements CrudService<IncomeDTO, Long> {
         return incomeMapper.map(updated);
     }
 
-    @Override
+
     public void delete(Long aLong) {
-        incomeRepository.deleteById(aLong);
+        incomeRepository.deleteByIdAndUser(aLong, authService.getCurrentUser());
     }
 }
