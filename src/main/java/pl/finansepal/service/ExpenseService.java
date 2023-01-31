@@ -31,12 +31,7 @@ public class ExpenseService  { //implements CrudService<ExpenseDTO, Long>
     private final AuthService authService;
 
 
-//    public List<ExpenseDTO> list() {
-//        return expenseRepository.findAll(belongToUser(authService.getCurrentUser()))   //authService.getCurrentUser()
-//                .stream()
-//                .map(expenseMapper::map)
-//                .collect(Collectors.toList());
-//    }
+
     public List<ExpenseDTO> list(List<SearchCriteria> searchCriteriaList) {
         if (searchCriteriaList == null) {
             return expenseRepository.findAll(belongToUser(authService.getCurrentUser()))   //authService.getCurrentUser()
@@ -55,22 +50,7 @@ public class ExpenseService  { //implements CrudService<ExpenseDTO, Long>
         }
     }
 
-//    public List<ExpenseDTO> list() {
-//        return expenseRepository.findAll(belongToUser(authService.getCurrentUser()))   //authService.getCurrentUser()
-//                .stream()
-//                .map(expenseMapper::map)
-//                .collect(Collectors.toList());
-//    }
-//    public List<ExpenseDTO> list(List<SearchCriteria> searchCriteriaList) {
-//        ExpenseSpecification spec = new ExpenseSpecification();
-//
-//        searchCriteriaList.stream().forEach(searchCriteria -> spec.add(searchCriteria)); // to check and implement
-//
-//        return expenseRepository.findAll(where(spec).and(belongToUser(authService.getCurrentUser())))   //authService.getCurrentUser()
-//                .stream()
-//                .map(expenseMapper::map)
-//                .collect(Collectors.toList());
-//    }
+
     public ExpenseDTO get(Long id) {
         return expenseRepository.findByIdAndUser(id, authService.getCurrentUser())
                 .map(expense -> expenseMapper.map(expense))

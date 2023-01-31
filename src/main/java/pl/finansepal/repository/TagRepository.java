@@ -6,12 +6,15 @@ import org.springframework.stereotype.Repository;
 import pl.finansepal.model.Tag;
 import pl.finansepal.model.User;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface TagRepository extends JpaRepository<Tag, Long > , JpaSpecificationExecutor<Tag> {
 
 
+
+    List<Tag> findAllByUser(User user);
 
     Optional<Tag> findByIdAndUser(Long id, User user);
 

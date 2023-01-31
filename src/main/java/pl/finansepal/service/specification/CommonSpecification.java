@@ -1,13 +1,11 @@
 package pl.finansepal.service.specification;
 
-import jakarta.persistence.Cacheable;
+
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 import pl.finansepal.model.Expense;
 import pl.finansepal.model.SearchCriteria;
 import pl.finansepal.model.SearchOperation;
@@ -16,34 +14,28 @@ import pl.finansepal.model.User;
 import java.util.ArrayList;
 import java.util.List;
 
-import static pl.finansepal.service.specification.CommonSpecification.searchCriteriaList;
-
-@Component
-public class ExpenseSpecification implements Specification<Expense>  {  //Specification<Expense>
-
-    private List<SearchCriteria> searchCriteriaList;
+public interface CommonSpecification<T> extends Specification<T> {
 
 
-    public ExpenseSpecification() {
-        this.searchCriteriaList = new ArrayList<>();
-    }
+    List<SearchCriteria> searchCriteriaList = null;
 
-    public void add(SearchCriteria criteria) {
+
+    public default void add(SearchCriteria criteria) {
         searchCriteriaList.add(criteria);
     }
 
-    public static Specification<Expense> belongToUser(User user) {
-
-        return new Specification<Expense>() {
+    default Specification<T> belongToUser(User user) {
+        return new Specification<T>() {
             @Override
-            public Predicate toPredicate(Root<Expense> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+            public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
                 return criteriaBuilder.equal(root.get("user"), user);
             }
         };
     }
 
+
     @Override
-    public Predicate toPredicate(Root<Expense> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+    public default Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 
         List<Predicate> predicates = new ArrayList<>();
 
@@ -94,7 +86,7 @@ public class ExpenseSpecification implements Specification<Expense>  {  //Specif
                 predicates.add(
                         criteriaBuilder.like(
                                 criteriaBuilder.lower(root.get(criteria.getKey())),
-                                 "%" + criteria.getValue().toString().toLowerCase() + "%")
+                                "%" + criteria.getValue().toString().toLowerCase() + "%")
 
                 );
             } else if (criteria.getOperation().equals(SearchOperation.MATCH_END)) {
@@ -114,7 +106,7 @@ public class ExpenseSpecification implements Specification<Expense>  {  //Specif
             } else if (criteria.getOperation().equals(SearchOperation.IN)) {
                 predicates.add(
                         criteriaBuilder.in(
-                                root.get(criteria.getKey())).
+                                        root.get(criteria.getKey())).
                                 value(criteria.getValue())
 
                 );

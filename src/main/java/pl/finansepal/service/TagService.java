@@ -27,7 +27,7 @@ public class TagService implements CrudService<TagDTO, Long> {
 
     @Override
     public List<TagDTO> list() {
-        return tagRepository.findAll()
+        return tagRepository.findAllByUser(authService.getCurrentUser())
                 .stream()
                 .map(tagMapper::map)
                 .collect(Collectors.toList());

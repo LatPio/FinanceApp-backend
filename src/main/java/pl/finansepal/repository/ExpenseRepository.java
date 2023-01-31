@@ -21,6 +21,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long>, JpaSpec
     @Override
     Optional<Expense> findById(Long aLong);
 
+
     Optional<Expense> findByIdAndUser(Long id, User user);
 
     Optional<Void> deleteByIdAndUser(Long id, User user);

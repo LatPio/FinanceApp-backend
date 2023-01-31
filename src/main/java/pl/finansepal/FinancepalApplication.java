@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @SpringBootApplication
 @PropertySource("classpath:secret.properties")
 @EnableAsync
+
 public class FinancepalApplication {
 
 	public static void main(String[] args) {

@@ -32,17 +32,19 @@ public class SecurityConfig {
         http
                 .csrf().disable()
                 .cors().disable()
-                .authorizeHttpRequests()
-                .requestMatchers("/api/auth/**", "/swagger-ui/**")
-                .permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
+                .securityMatcher("/api/**")
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers( "/api/auth/**")
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated()
+                )
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+
 
         ;
         return http.build();
