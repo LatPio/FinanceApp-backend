@@ -30,6 +30,21 @@ spring:
           starttls:
             enable: true
             required: true
+web:
+  filter:
+    cors:
+      allowed-origins: http://localhost:4201
+      max-age: 3600
+      allowed-methods: GET, POST, PATCH, PUT, DELETE, OPTIONS, HEAD
+      exposed-headers: Authorization
+      allowed-headers: "*"
+#      url-patterns: "http://localhost:4200"
+
+
+
+
+
+
 #    host: ${mail.host}
 #    port: ${mail.port}
 #    username: ${mail.username}

@@ -1,6 +1,8 @@
 package pl.finansepal.security.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,13 +13,23 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import pl.finansepal.repository.UserRepository;
+import pl.finansepal.security.model.CorsFilterProperties;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 @Configuration
 @RequiredArgsConstructor
+@EnableWebMvc
+//@EnableConfigurationProperties(CorsFilterProperties.class)
 public class ApplicationConfig {
 
     private final UserRepository userRepository;
+    private final CorsFilterProperties corsFilterProperties;
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -44,5 +56,26 @@ public class ApplicationConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+//    @Bean
+//    public WebMvcConfigurer corsMappingConfigurer(){
+//        return new WebMvcConfigurer() {
+//
+//            @Override
+//            public void addCorsMappings(CorsRegistry registry) {
+//
+////                WebMvcConfigurer.super.addCorsMappings(registry);
+//                registry.addMapping("/**")
+//                        .allowedOrigins("http://localhost:4201")
+//                        .allowedMethods("*")
+//                        .maxAge(3600L)
+//                        .allowedHeaders("*")
+//                        .exposedHeaders("Authorization")
+//                        .allowCredentials(true);
+//
+//
+//            }
+//        };
+//    }
 
 }
