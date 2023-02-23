@@ -112,7 +112,7 @@ public class IncomeSpecification implements Specification<Income>{
 
                 );
 
-            }else if (criteria.getOperation().equals(SearchOperation.OBJECT)) {
+            }else if (criteria.getOperation().equals(SearchOperation.TAG_OBJECT)) {
 
                 query.distinct(true);
                 Subquery<Tag> tagSubQuery = query.subquery(Tag.class);

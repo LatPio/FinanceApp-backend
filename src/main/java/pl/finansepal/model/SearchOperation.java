@@ -12,5 +12,7 @@ public enum SearchOperation {
     MATCH_END,
     IN,
     NOT_IN,
-    OBJECT
+    TAG_OBJECT,
+    DATE_GREATER_THAN_EQUAL,
+    DATE_LESS_THAN_EQUAL
 }

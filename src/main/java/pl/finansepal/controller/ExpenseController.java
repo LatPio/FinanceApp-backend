@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/api/expenses")
 @AllArgsConstructor
 @Slf4j
-public class ExpanseController {
+public class ExpenseController {
 
     private final ExpenseService expenseService;
 

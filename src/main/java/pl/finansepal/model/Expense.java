@@ -7,6 +7,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -29,9 +31,9 @@ public class Expense {
     private String currency;
     @Column(name = "Name")
     private String name;
-//    @Column (name = "Tags")
+    @Column(name = "Date")
+    private LocalDateTime date;
     @ManyToMany()
-//    @JoinColumn(name = "tags_id", referencedColumnName = "ID")
     @JoinTable(
             name = "Tags_Expense",
             joinColumns = @JoinColumn(name = "expense_id"),

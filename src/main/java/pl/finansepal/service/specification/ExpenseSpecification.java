@@ -7,9 +7,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import pl.finansepal.model.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 import static pl.finansepal.service.specification.CommonSpecification.searchCriteriaList;
 
@@ -119,7 +123,7 @@ public class ExpenseSpecification implements Specification<Expense>  {  //Specif
                                 root.get(criteria.getKey())).in(criteria.getValue())
 
                 );
-            }else if (criteria.getOperation().equals(SearchOperation.OBJECT)) {
+            } else if (criteria.getOperation().equals(SearchOperation.TAG_OBJECT)) {
 
                 query.distinct(true);
                 Subquery<Tag> tagSubQuery = query.subquery(Tag.class);
@@ -133,6 +137,24 @@ public class ExpenseSpecification implements Specification<Expense>  {  //Specif
                                         criteriaBuilder.isMember(root, tagExpense)
                                 )
                         )
+                );
+
+            } else if (criteria.getOperation().equals(SearchOperation.DATE_GREATER_THAN_EQUAL)) {
+                DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
+                predicates.add(
+                        criteriaBuilder.greaterThanOrEqualTo(
+                                root.get(criteria.getKey()), LocalDateTime.parse(criteria.getValue().toString(), inputFormatter))
+
+                );
+
+            } else if (criteria.getOperation().equals(SearchOperation.DATE_LESS_THAN_EQUAL)) {
+                DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
+                predicates.add(
+                        criteriaBuilder.lessThanOrEqualTo(
+                                root.get(criteria.getKey()), LocalDateTime.parse(criteria.getValue().toString(), inputFormatter))
+
                 );
 
             }
