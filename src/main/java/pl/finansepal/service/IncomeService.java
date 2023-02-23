@@ -1,5 +1,6 @@
 package pl.finansepal.service;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.factory.Mappers;
@@ -24,6 +25,7 @@ import static pl.finansepal.service.specification.IncomeSpecification.*;
 @Service
 @AllArgsConstructor
 @Slf4j
+@Transactional
 public class IncomeService  { //implements CrudService<IncomeDTO, Long>
 
     private final IncomeRepository incomeRepository;
@@ -44,7 +46,7 @@ public class IncomeService  { //implements CrudService<IncomeDTO, Long>
         } else {
             IncomeSpecification spec = new IncomeSpecification();
             searchCriteriaList.stream().forEach(searchCriteria -> spec.add(searchCriteria));
-            return incomeRepository.findAll(where(spec).and(belongToUser(authService.getCurrentUser())))//
+            return incomeRepository.findAll(where(spec).and(belongToUser(authService.getCurrentUser())))
                     .stream()
                     .map(incomeMapper::map)
                     .collect(Collectors.toList());

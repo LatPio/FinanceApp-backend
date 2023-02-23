@@ -57,25 +57,6 @@ public class ApplicationConfig {
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    public WebMvcConfigurer corsMappingConfigurer(){
-//        return new WebMvcConfigurer() {
-//
-//            @Override
-//            public void addCorsMappings(CorsRegistry registry) {
-//
-////                WebMvcConfigurer.super.addCorsMappings(registry);
-//                registry.addMapping("/**")
-//                        .allowedOrigins("http://localhost:4201")
-//                        .allowedMethods("*")
-//                        .maxAge(3600L)
-//                        .allowedHeaders("*")
-//                        .exposedHeaders("Authorization")
-//                        .allowCredentials(true);
-//
-//
-//            }
-//        };
-//    }
+
 
 }

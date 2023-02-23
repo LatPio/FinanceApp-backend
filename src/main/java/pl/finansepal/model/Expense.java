@@ -17,8 +17,10 @@ import java.util.List;
 public class Expense {
 
 
+    @TableGenerator(name = "id_generator", table = "id_gen", pkColumnName = "gen_name", valueColumnName = "gen_value",
+            pkColumnValue="task_gen", initialValue=10000, allocationSize=10)
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "id_generator")
     @Column(name = "ID")
     private Long id;
     @Column(name = "Amount")
@@ -27,11 +29,17 @@ public class Expense {
     private String currency;
     @Column(name = "Name")
     private String name;
-    @Column (name = "Tags")
-    @OneToMany(mappedBy = "id")
+//    @Column (name = "Tags")
+    @ManyToMany()
+//    @JoinColumn(name = "tags_id", referencedColumnName = "ID")
+    @JoinTable(
+            name = "Tags_Expense",
+            joinColumns = @JoinColumn(name = "expense_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
     private List<Tag> tags;
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "ID")
     private User user;
     @CreationTimestamp
     @Column(name = "CreationDate")

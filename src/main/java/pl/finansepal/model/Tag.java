@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.List;
 
 @Data
 @Entity
@@ -22,7 +23,10 @@ public class Tag {
     private Long id;
     @Column(name = "Name")
     private String name;
-
+    @ManyToMany(mappedBy = "tags")
+    private List<Expense> expenses;
+    @ManyToMany(mappedBy = "tags")
+    private List<Income> incomes;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

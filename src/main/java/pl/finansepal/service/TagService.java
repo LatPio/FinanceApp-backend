@@ -1,5 +1,6 @@
 package pl.finansepal.service;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.factory.Mappers;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 @Slf4j
+@Transactional
 public class TagService implements CrudService<TagDTO, Long> {
 
     private final TagRepository tagRepository;

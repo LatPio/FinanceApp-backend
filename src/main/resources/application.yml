@@ -33,10 +33,11 @@ spring:
 web:
   filter:
     cors:
-      allowed-origins: http://localhost:4201
+      allowed-origins: "http://localhost:4200"
       max-age: 3600
-      allowed-methods: GET, POST, PATCH, PUT, DELETE, OPTIONS, HEAD
-      exposed-headers: Authorization
+#      allowed-methods: GET, POST, PATCH, PUT, DELETE, OPTIONS, HEAD
+      allowed-methods: "*"
+      exposed-headers: "Authorization"
       allowed-headers: "*"
 #      url-patterns: "http://localhost:4200"
 

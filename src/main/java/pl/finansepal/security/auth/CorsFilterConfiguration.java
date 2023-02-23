@@ -54,6 +54,9 @@ public class CorsFilterConfiguration {
         if(!CollectionUtils.isEmpty(corsFilterProperties.getAllowedOrigins())){
             corsConfiguration.setAllowedOrigins(corsFilterProperties.getAllowedOrigins());
         }
+        if(!CollectionUtils.isEmpty(corsFilterProperties.getExposedHeaders())){
+            corsConfiguration.setExposedHeaders(corsFilterProperties.getExposedHeaders());
+        }
 
         return corsConfiguration;
 

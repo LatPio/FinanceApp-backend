@@ -17,5 +17,5 @@ public class AuthenticationResponse {
     private String token;
     private String refreshToken;
     private Instant expiresAt;
-//    private String email;
+    private String email;
 }

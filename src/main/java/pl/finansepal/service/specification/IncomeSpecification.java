@@ -1,17 +1,12 @@
 package pl.finansepal.service.specification;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
-import pl.finansepal.model.Income;
-import pl.finansepal.model.SearchCriteria;
-import pl.finansepal.model.SearchOperation;
-import pl.finansepal.model.User;
+import pl.finansepal.model.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Component
@@ -116,6 +111,23 @@ public class IncomeSpecification implements Specification<Income>{
                                 root.get(criteria.getKey())).in(criteria.getValue())
 
                 );
+
+            }else if (criteria.getOperation().equals(SearchOperation.OBJECT)) {
+
+                query.distinct(true);
+                Subquery<Tag> tagSubQuery = query.subquery(Tag.class);
+                Root<Tag> tagRoot= tagSubQuery.from(Tag.class);
+                Expression<Collection<Income>> tagIncome = tagRoot.get("incomes");
+                tagSubQuery.select(tagRoot);
+                predicates.add(
+                        criteriaBuilder.exists(
+                                tagSubQuery.where(
+                                criteriaBuilder.equal(tagRoot.get("id"), criteria.getValue()),
+                                criteriaBuilder.isMember(root, tagIncome)
+                                )
+                        )
+                );
+
             }
         }
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

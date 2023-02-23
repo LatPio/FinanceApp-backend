@@ -23,8 +23,7 @@ import java.util.function.Function;
 @NoArgsConstructor
 public class JwtService {
 
-//    private static final String SECRET_KEY = "4D6251655468576D5A7134743777397A24432646294A404E635266556A586E32";
-//
+
     @Value("${SECRET_KEY}")
     private String SECRET_KEY;
     @Value("${jwt.expiration.time}")

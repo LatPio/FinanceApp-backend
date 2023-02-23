@@ -90,25 +90,17 @@ public class AuthService {
         var user = userRepository.findByEmail(loginRequest.getEmail())
                         .orElseThrow( () -> new AppRuntimeException("User not found - " + loginRequest.getEmail()));
         var jwtToken = jwtService.generateToken(user);
-//        SecurityContextHolder.getContext().setAuthentication(authenticate);
-//        String token = jwtService.generateToken(authenticate);
-//        return new AuthenticationResponse(token, loginRequest.getUsername());
+
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .refreshToken(refreshTokenService.generateRefreshToken(user.getEmail()).getToken())
                 .expiresAt(Instant.now().plusMillis(jwtService.getJwtExpirationInMillis()))
+                .email(user.getEmail())
                 .build();
     }
 
     public User getCurrentUser(){
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        String authenticationHeader = request.getHeader("Authorization");
-//        String authenticationHeader = principal.getEmail();
-//        String jwtToken;
-//        String userEmail;
-//        jwtToken = authenticationHeader.substring(7);
-//        userEmail = jwtService.extractUsername(jwtToken);
-//        User user = userRepository.findByEmail(userEmail).orElse(null);
         return principal;
     }
 

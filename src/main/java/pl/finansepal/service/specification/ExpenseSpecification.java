@@ -1,19 +1,14 @@
 package pl.finansepal.service.specification;
 
 import jakarta.persistence.Cacheable;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import pl.finansepal.model.Expense;
-import pl.finansepal.model.SearchCriteria;
-import pl.finansepal.model.SearchOperation;
-import pl.finansepal.model.User;
+import pl.finansepal.model.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static pl.finansepal.service.specification.CommonSpecification.searchCriteriaList;
@@ -124,6 +119,22 @@ public class ExpenseSpecification implements Specification<Expense>  {  //Specif
                                 root.get(criteria.getKey())).in(criteria.getValue())
 
                 );
+            }else if (criteria.getOperation().equals(SearchOperation.OBJECT)) {
+
+                query.distinct(true);
+                Subquery<Tag> tagSubQuery = query.subquery(Tag.class);
+                Root<Tag> tagRoot= tagSubQuery.from(Tag.class);
+                Expression<Collection<Expense>> tagExpense = tagRoot.get("expenses");
+                tagSubQuery.select(tagRoot);
+                predicates.add(
+                        criteriaBuilder.exists(
+                                tagSubQuery.where(
+                                        criteriaBuilder.equal(tagRoot.get("id"), criteria.getValue()),
+                                        criteriaBuilder.isMember(root, tagExpense)
+                                )
+                        )
+                );
+
             }
         }
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

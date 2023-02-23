@@ -1,5 +1,6 @@
 package pl.finansepal.service;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.factory.Mappers;
@@ -23,6 +24,7 @@ import static pl.finansepal.service.specification.ExpenseSpecification.belongToU
 @Service
 @AllArgsConstructor
 @Slf4j
+@Transactional
 public class ExpenseService  { //implements CrudService<ExpenseDTO, Long>
 
     private final ExpenseRepository expenseRepository;
@@ -74,7 +76,6 @@ public class ExpenseService  { //implements CrudService<ExpenseDTO, Long>
         return expenseMapper.map(updated);
 
     }
-
     public void delete(Long id) {
 
         expenseRepository.deleteByIdAndUser(id, authService.getCurrentUser());

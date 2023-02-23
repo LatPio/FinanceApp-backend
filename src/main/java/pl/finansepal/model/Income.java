@@ -31,7 +31,13 @@ public class Income {
     private String currency;
     @Column(name = "Name")
     private String name;
-    @OneToMany(mappedBy = "id")
+    @ManyToMany()
+//    @JoinColumn(name = "tags_id", referencedColumnName = "ID")
+    @JoinTable(
+            name = "Tags_Income",
+            joinColumns = @JoinColumn(name = "income_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
     private List<Tag> tags;
     @ManyToOne
     @JoinColumn(name = "user_id")

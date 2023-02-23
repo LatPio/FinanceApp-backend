@@ -1,13 +1,11 @@
 package pl.finansepal.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.finansepal.controller.dto.ExpenseDTO;
-import pl.finansepal.controller.dto.IncomeDTO;
 import pl.finansepal.model.SearchCriteria;
 import pl.finansepal.service.ExpenseService;
 
@@ -29,7 +27,11 @@ public class ExpanseController {
     }
 
     @GetMapping(path = "/list")
-    public ResponseEntity<List<ExpenseDTO>> getAll (@RequestBody(required = false) List<SearchCriteria> searchCriteria){
+    public ResponseEntity<List<ExpenseDTO>> getAll (@RequestParam(required = false) List<SearchCriteria> searchCriteria){
+        return ResponseEntity.status(HttpStatus.OK).body(expenseService.list(searchCriteria));
+    }
+    @PostMapping(path = "/list")
+    public ResponseEntity<List<ExpenseDTO>> getAllWithSpec(@RequestBody List<SearchCriteria> searchCriteria){
         return ResponseEntity.status(HttpStatus.OK).body(expenseService.list(searchCriteria));
     }
 
