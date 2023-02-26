@@ -30,6 +30,11 @@ public class IncomeController {
         return ResponseEntity.status(HttpStatus.OK).body(incomeService.list(searchCriteria));
     }
 
+    @PostMapping("/list")
+    public ResponseEntity<List<IncomeDTO>> getAllWithSpec (@RequestBody List<SearchCriteria> searchCriteria){
+        return ResponseEntity.status(HttpStatus.OK).body(incomeService.list(searchCriteria));
+    }
+
     @GetMapping
     public ResponseEntity<IncomeDTO> get(@RequestParam Long id){
         return ResponseEntity.status(HttpStatus.OK).body(incomeService.get(id));
