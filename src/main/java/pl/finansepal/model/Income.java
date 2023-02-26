@@ -11,6 +11,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -31,6 +32,8 @@ public class Income {
     private String currency;
     @Column(name = "Name")
     private String name;
+    @Column(name = "Date")
+    private LocalDateTime date;
     @ManyToMany()
 //    @JoinColumn(name = "tags_id", referencedColumnName = "ID")
     @JoinTable(

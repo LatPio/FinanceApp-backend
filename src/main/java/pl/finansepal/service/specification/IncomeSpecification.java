@@ -5,6 +5,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import pl.finansepal.model.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -122,10 +124,28 @@ public class IncomeSpecification implements Specification<Income>{
                 predicates.add(
                         criteriaBuilder.exists(
                                 tagSubQuery.where(
-                                criteriaBuilder.equal(tagRoot.get("id"), criteria.getValue()),
-                                criteriaBuilder.isMember(root, tagIncome)
+                                        criteriaBuilder.equal(tagRoot.get("id"), criteria.getValue()),
+                                        criteriaBuilder.isMember(root, tagIncome)
                                 )
                         )
+                );
+
+            } else if (criteria.getOperation().equals(SearchOperation.DATE_GREATER_THAN_EQUAL)) {
+                DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
+                predicates.add(
+                        criteriaBuilder.greaterThanOrEqualTo(
+                                root.get(criteria.getKey()), LocalDateTime.parse(criteria.getValue().toString(), inputFormatter))
+
+                );
+
+            } else if (criteria.getOperation().equals(SearchOperation.DATE_LESS_THAN_EQUAL)) {
+                DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
+                predicates.add(
+                        criteriaBuilder.lessThanOrEqualTo(
+                                root.get(criteria.getKey()), LocalDateTime.parse(criteria.getValue().toString(), inputFormatter))
+
                 );
 
             }
