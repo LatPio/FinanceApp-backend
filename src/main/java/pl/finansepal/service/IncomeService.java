@@ -36,6 +36,7 @@ import static pl.finansepal.service.specification.IncomeSpecification.*;
 public class IncomeService  { //implements CrudService<IncomeDTO, Long>
 
     private final IncomeRepository incomeRepository;
+    private final TagService tagService;
 
     private final IncomeMapper incomeMapper = Mappers.getMapper(IncomeMapper.class);
     private final UserMapper userMapper = Mappers.getMapper(UserMapper.class);
@@ -119,19 +120,33 @@ public class IncomeService  { //implements CrudService<IncomeDTO, Long>
 
                     output.put(key,value);
                 });
-//        Stream.iterate(numbersOfLastMonth ,n-> n-1).limit(numbersOfLastMonth+1).forEach( integer -> {
-//            labels.add(LocalDateTime.now().minusMonths(integer).format(DateTimeFormatter.ofPattern("yyyy - MM")));
-//            if( incomeRepository.sumOfIncomesByDate(startMonth.minusMonths(integer), endMonth.minusMonths(integer), belongToUser(authService.getCurrentUser())) == null){
-//                monthlyIncomes.add(BigDecimal.valueOf(0));
-//            } else {
-//                monthlyIncomes.add(
-//                        incomeRepository.sumOfIncomesByDate(
-//                                startMonth.minusMonths(integer),
-//                                endMonth.minusMonths(integer),
-//                                belongToUser(authService.getCurrentUser())
-//                        ).setScale(2, RoundingMode.HALF_UP));
-//            }
-//        });
+
+
+        return output;
+    }
+
+    public Map<String, BigDecimal> getAmountsForTagsFromLast(LocalDateTime dateStart, LocalDateTime dateEnd){
+
+
+        Map<String, BigDecimal> output = new TreeMap<>();
+        List<String> labels = new ArrayList<>();
+        List<Long> labelsIds = new ArrayList<>();
+//        List<BigDecimal> monthlyIncomes = new ArrayList<>();
+        tagService.list().stream().forEach(s -> {
+            labels.add(s.getName());
+            labelsIds.add((s.getId()));
+        });
+        labelsIds.forEach(aLong -> {
+            BigDecimal value;
+            String key = tagService.get(aLong).getName();
+            if(incomeRepository.sumByTags_IdAndDateBetween(aLong, dateStart, dateEnd, belongToUser(authService.getCurrentUser())) == null) {
+                value = BigDecimal.valueOf(0);
+            } else  {
+                value = incomeRepository.sumByTags_IdAndDateBetween(aLong, dateStart, dateEnd, belongToUser(authService.getCurrentUser())).setScale(2, RoundingMode.HALF_UP);
+            }
+            output.put(key, value);
+        });
+
 
         return output;
     }

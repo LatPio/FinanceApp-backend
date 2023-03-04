@@ -10,6 +10,8 @@ import pl.finansepal.model.User;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -24,6 +26,10 @@ public interface IncomeRepository extends JpaRepository<Income, Long> , JpaSpeci
 
     @Query("select sum(amount) from Income where date between ?1 and ?2")
     BigDecimal sumOfIncomesByDate(LocalDateTime startDate, LocalDateTime endDate, Specification<Income> incomeSpecification);
+
+    @Query("select sum(i.amount) from Income i inner join i.tags tags where tags.id = ?1 and i.date between ?2 and ?3")
+    BigDecimal sumByTags_IdAndDateBetween(Long id, LocalDateTime dateStart, LocalDateTime dateEnd, Specification<Income> incomeSpecification);
+
 
 
 }
