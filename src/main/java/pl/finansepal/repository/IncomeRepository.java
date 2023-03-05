@@ -30,6 +30,8 @@ public interface IncomeRepository extends JpaRepository<Income, Long> , JpaSpeci
     @Query("select sum(i.amount) from Income i inner join i.tags tags where tags.id = ?1 and i.date between ?2 and ?3")
     BigDecimal sumByTags_IdAndDateBetween(Long id, LocalDateTime dateStart, LocalDateTime dateEnd, Specification<Income> incomeSpecification);
 
+    @Query("select min(i.date) from Income i")
+    LocalDateTime findFirstDate(Specification<Income> incomeSpecification);
 
 
 }

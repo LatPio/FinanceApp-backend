@@ -151,4 +151,17 @@ public class IncomeService  { //implements CrudService<IncomeDTO, Long>
         return output;
     }
 
+    public LocalDateTime getFirstEntryByDate(){
+        return incomeRepository.findFirstDate(belongToUser(authService.getCurrentUser()));
+    }
+    public List<Integer> getYears(){
+        Integer minYear = incomeRepository.findFirstDate(belongToUser(authService.getCurrentUser())).getYear();
+        Integer maxYear = LocalDateTime.now().getYear();
+        List<Integer> listOfUsedYears = new ArrayList<>();
+        for (int i = minYear; i < maxYear+1; i++) {
+            listOfUsedYears.add(i);
+        }
+        return listOfUsedYears;
+    }
+
 }

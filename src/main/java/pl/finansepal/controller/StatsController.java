@@ -66,4 +66,13 @@ public class StatsController {
         return ResponseEntity.status(HttpStatus.OK).body(expenseService.getAmountsForTagsFromLast(startDate, ednDate));
     }
 
+    @GetMapping("/firstEntryDate")
+    public ResponseEntity<LocalDateTime> getFirstEntryDate(){
+        return ResponseEntity.status(HttpStatus.OK).body(incomeService.getFirstEntryByDate());
+    }
+    @GetMapping("/listOfYears")
+    public ResponseEntity<List<Integer>> getListOfYears(){
+        return ResponseEntity.status(HttpStatus.OK).body(incomeService.getYears());
+    }
+
 }

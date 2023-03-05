@@ -129,7 +129,6 @@ public class ExpenseService  { //implements CrudService<ExpenseDTO, Long>
         Map<String, BigDecimal> output = new TreeMap<>();
         List<String> labels = new ArrayList<>();
         List<Long> labelsIds = new ArrayList<>();
-//        List<BigDecimal> monthlyIncomes = new ArrayList<>();
         tagService.list().stream().forEach(s -> {
             labels.add(s.getName());
             labelsIds.add((s.getId()));
