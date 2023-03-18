@@ -10,7 +10,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.finansepal.model.UserOptions;
 import pl.finansepal.repository.RefreshTokenRepository;
+import pl.finansepal.repository.UserOptionsRepository;
 import pl.finansepal.security.model.*;
 import pl.finansepal.exeption.AppRuntimeException;
 import pl.finansepal.model.NotificationEmail;
@@ -21,13 +23,13 @@ import pl.finansepal.repository.VerificationTokenRepository;
 import pl.finansepal.service.MailService;
 
 import java.time.Instant;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
 public class AuthService {
 
+    private final UserOptionsRepository userOptionsRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
@@ -38,15 +40,25 @@ public class AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     public void signup(RegisterRequest request){
+
         var user = User.builder()
                 .userName(request.getUsername())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .createdAt(Instant.now())
                 .enabled(false)
+//                .userOptions(userOptions)
                 .build();
 
         userRepository.save(user);
+
+        var userOptions = UserOptions.builder()
+                .userPagination("10,25")
+                .defaultCurrency("PLN")
+                .getLastNumberOfMonthsData(12)
+                .user(user)
+                .build();
+        userOptionsRepository.save(userOptions);
 
         String token = generateVerificationToken(user);
         mailService.sendMail(new NotificationEmail(

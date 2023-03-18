@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import pl.finansepal.repository.IncomeRepository;
 import pl.finansepal.service.ExpenseService;
 import pl.finansepal.service.IncomeService;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -74,5 +74,17 @@ public class StatsController {
     public ResponseEntity<List<Integer>> getListOfYears(){
         return ResponseEntity.status(HttpStatus.OK).body(incomeService.getYears());
     }
+
+    @GetMapping("/detailedInfoIncome")
+    public ResponseEntity<Map<String, ArrayList<BigDecimal>>> getDetailedInfoIncome(@RequestParam("year") Integer year){
+        return ResponseEntity.status(HttpStatus.OK).body(incomeService.yearDetailedInfo(year));
+    }
+
+    @GetMapping("/detailedInfoExpense")
+    public ResponseEntity<Map<String, ArrayList<BigDecimal>>> getDetailedInfoExpense(@RequestParam("year") Integer year){
+        return ResponseEntity.status(HttpStatus.OK).body(expenseService.yearDetailedInfo(year));
+    }
+
+
 
 }

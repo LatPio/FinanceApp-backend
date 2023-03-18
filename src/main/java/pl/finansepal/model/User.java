@@ -44,7 +44,11 @@ public class User implements UserDetails {
     @UpdateTimestamp
     @Column(name = "UpdateDate")
     private Instant updateAt;
-
+//    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+//    @PrimaryKeyJoinColumn
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "userOptions_id", referencedColumnName = "id")
+//    private UserOptions userOptions;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;

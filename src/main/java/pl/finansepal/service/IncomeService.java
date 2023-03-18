@@ -164,4 +164,35 @@ public class IncomeService  { //implements CrudService<IncomeDTO, Long>
         return listOfUsedYears;
     }
 
+    public Map<String, ArrayList<BigDecimal>> yearDetailedInfo(Integer year){
+
+        Map<String, ArrayList<BigDecimal>> output = new TreeMap<>();
+        List<String> labels = new ArrayList<>();
+        List<Long> labelsIds = new ArrayList<>();
+        ArrayList<BigDecimal> monthlyAmounts = new ArrayList<>();
+        tagService.list().stream().forEach(s -> {
+            labels.add(s.getName());
+            labelsIds.add((s.getId()));
+        });
+        labelsIds.forEach(aLong -> {
+            ArrayList<BigDecimal> value= new ArrayList<>();
+            String key = tagService.get(aLong).getName();
+            Stream.iterate(1, n-> n+1).limit(12).forEach(month ->{
+                LocalDateTime initial = LocalDateTime.of(year,month,1,0,0);
+                LocalDateTime dateStart = initial.withDayOfMonth(1);
+                LocalDateTime dateEnd = initial.withDayOfMonth(initial.getMonth().length(LocalDate.of(year,month,1).isLeapYear()));
+                if(incomeRepository.sumByTags_IdAndDateBetween(aLong, dateStart, dateEnd, belongToUser(authService.getCurrentUser())) == null) {
+                    value.add(BigDecimal.valueOf(0))  ;
+                } else  {
+                    value.add(incomeRepository.sumByTags_IdAndDateBetween(aLong, dateStart, dateEnd, belongToUser(authService.getCurrentUser())).setScale(2, RoundingMode.HALF_UP));
+                }
+            });
+
+            output.put(key, value);
+        });
+
+
+        return output;
+    }
+
 }
