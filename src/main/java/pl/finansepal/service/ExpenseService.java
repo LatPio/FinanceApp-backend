@@ -125,7 +125,6 @@ public class ExpenseService  { //implements CrudService<ExpenseDTO, Long>
     }
     public Map<String, BigDecimal> getAmountsForTagsFromLast(LocalDateTime dateStart, LocalDateTime dateEnd){
 
-
         Map<String, BigDecimal> output = new TreeMap<>();
         List<String> labels = new ArrayList<>();
         List<Long> labelsIds = new ArrayList<>();
