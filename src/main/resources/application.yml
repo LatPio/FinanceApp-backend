@@ -1,4 +1,3 @@
-# Postgressql local config
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5433/${db.name}
@@ -17,9 +16,9 @@ spring:
     init:
       mode: always
   mail:
-    host: smtp.mailtrap.io
-    username: 74c3720ec6fd0a
-    password: 38eb6679679df4
+    host: ${mail.host}
+    username: ${mail.username}
+    password: ${mail.password}
     properties:
       mail:
         transport:
@@ -33,35 +32,16 @@ spring:
 web:
   filter:
     cors:
-      allowed-origins: "http://localhost:4200"
+      allowed-origins: ${CORS.allowed-origins}
       max-age: 3600
-#      allowed-methods: GET, POST, PATCH, PUT, DELETE, OPTIONS, HEAD
       allowed-methods: "*"
       exposed-headers: "Authorization"
       allowed-headers: "*"
-#      url-patterns: "http://localhost:4200"
 
 
 
 
 
 
-#    host: ${mail.host}
-#    port: ${mail.port}
-#    username: ${mail.username}
-#    password: ${mail.password}
-#    protocol: ${mail.protocol}
 
-# Postgressql heroku DB local App
-#spring:
-#  datasource:
-#    url: jdbc:postgresql://localhost:5433/${db.name}
-#    username: ${db.user}
-#    password: ${db.pass}
 
-## postgres heroku hosting
-#spring:
-#  datasource:
-#    url: ${JDBC_DATABASE_URL}
-#    username: ${JDBC_DATABASE_USERNAME}
-#    password: ${JDBC_DATABASE_PASSWORD}
