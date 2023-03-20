@@ -1,11 +1,7 @@
 package pl.finansepal.security.auth;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.filters.CorsFilter;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.CollectionUtils;
@@ -19,16 +15,6 @@ import pl.finansepal.security.model.CorsFilterProperties;
 public class CorsFilterConfiguration {
 
     private final CorsFilterProperties corsFilterProperties;
-
-//    @Bean("corsFilter")
-//    public FilterRegistrationBean<CorsFilter> corsFilter() {
-//        final CorsConfiguration config = buildCorsParameters();
-//        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", config);
-//        CorsFilter filter = new CorsFilter(source);
-//        return new FilterRegistrationBean(filter);
-//    }
-
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration config = buildCorsParameters();
@@ -59,7 +45,5 @@ public class CorsFilterConfiguration {
         }
 
         return corsConfiguration;
-
-
     }
 }

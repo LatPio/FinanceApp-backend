@@ -23,9 +23,7 @@ public class AuthController {
     public ResponseEntity<String> signup(@RequestBody RegisterRequest request){
         authService.signup(request);
         return new ResponseEntity<>("User Registraion Successfull", HttpStatus.OK);
-
     }
-
 
     @GetMapping("/accountVerification/{token}")
     public ResponseEntity<String> verifyAccount (@PathVariable String token){
@@ -46,7 +44,6 @@ public class AuthController {
 
         return ResponseEntity.ok(authService.refreshToken(refreshTokenRequest));
     }
-
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout (@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {

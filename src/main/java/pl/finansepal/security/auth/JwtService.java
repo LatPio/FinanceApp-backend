@@ -28,12 +28,10 @@ public class JwtService {
     private String SECRET_KEY;
     @Value("${jwt.expiration.time}")
     private Long jwtExpirationInMillis;
-//
-//    private Long jwtExpirationInMillis = 900000L;
+
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
-
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver){
