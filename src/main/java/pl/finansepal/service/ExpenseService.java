@@ -12,9 +12,7 @@ import pl.finansepal.model.Expense;
 import pl.finansepal.model.SearchCriteria;
 import pl.finansepal.repository.ExpenseRepository;
 import pl.finansepal.security.auth.AuthService;
-import pl.finansepal.service.common.CrudService;
 import pl.finansepal.service.specification.ExpenseSpecification;
-import pl.finansepal.service.specification.IncomeSpecification;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -35,7 +33,7 @@ import static pl.finansepal.service.specification.ExpenseSpecification.belongToU
 @AllArgsConstructor
 @Slf4j
 @Transactional
-public class ExpenseService  { //implements CrudService<ExpenseDTO, Long>
+public class ExpenseService  {
 
     private final ExpenseRepository expenseRepository;
     private final TagService tagService;
@@ -142,7 +140,6 @@ public class ExpenseService  { //implements CrudService<ExpenseDTO, Long>
             }
             output.put(key, value);
         });
-
 
         return output;
     }

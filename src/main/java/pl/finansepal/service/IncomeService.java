@@ -33,7 +33,7 @@ import static pl.finansepal.service.specification.IncomeSpecification.*;
 @AllArgsConstructor
 @Slf4j
 @Transactional
-public class IncomeService  { //implements CrudService<IncomeDTO, Long>
+public class IncomeService  {
 
     private final IncomeRepository incomeRepository;
     private final TagService tagService;
