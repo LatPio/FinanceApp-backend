@@ -28,10 +28,10 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long>, JpaSpec
 
     Optional<Void> deleteByIdAndUser(Long id, User user);
 
-    @Query("select sum(amount) from Expense where date between ?1 and ?2")
-    BigDecimal sumOfExpenseByDate(LocalDateTime startDate, LocalDateTime endDate, Specification<Expense> expenseSpecification);
+    @Query("select sum(e.amount) from Expense e where e.date between ?1 and ?2 and e.user = ?3")
+    BigDecimal sumOfExpenseByDate(LocalDateTime startDate, LocalDateTime endDate, User user);
 
-    @Query("select sum(i.amount) from Expense i inner join i.tags tags where tags.id = ?1 and i.date between ?2 and ?3")
-    BigDecimal sumByTags_IdAndDateBetween(Long id, LocalDateTime dateStart, LocalDateTime dateEnd, Specification<Expense> expenseSpecification);
+    @Query("select sum(i.amount) from Expense i inner join i.tags tags where tags.id = ?1 and i.date between ?2 and ?3 and i.user = ?4")
+    BigDecimal sumByTags_IdAndDateBetween(Long id, LocalDateTime dateStart, LocalDateTime dateEnd, User user);
 
 }

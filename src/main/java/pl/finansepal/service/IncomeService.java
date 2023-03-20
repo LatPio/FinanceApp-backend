@@ -47,7 +47,7 @@ public class IncomeService  { //implements CrudService<IncomeDTO, Long>
 
     public List<IncomeDTO> list(List<SearchCriteria> searchCriteriaList) {
         if (searchCriteriaList == null) {
-            return incomeRepository.findAll(belongToUser(authService.getCurrentUser()))//
+            return incomeRepository.findAll(belongToUser(authService.getCurrentUser()))
                     .stream()
                     .map(incomeMapper::map)
                     .collect(Collectors.toList());
@@ -93,7 +93,7 @@ public class IncomeService  { //implements CrudService<IncomeDTO, Long>
     }
 
     public BigDecimal getAmountByDate(LocalDateTime startDate, LocalDateTime endDate) {
-        return incomeRepository.sumOfIncomesByDate(startDate, endDate, belongToUser(authService.getCurrentUser()));
+        return incomeRepository.sumOfIncomesByDate(startDate, endDate, authService.getCurrentUser());
     }
 
     public Map<String, BigDecimal> getMonthlyAmountsFromLast(Integer numbersOfLastMonth){
@@ -107,14 +107,14 @@ public class IncomeService  { //implements CrudService<IncomeDTO, Long>
         Stream.iterate(numbersOfLastMonth ,n-> n-1).limit(numbersOfLastMonth+1).forEach( integer-> {
             String key = LocalDateTime.now().minusMonths(integer).format(DateTimeFormatter.ofPattern("yyyy - MM"));
             BigDecimal value;
-            if( incomeRepository.sumOfIncomesByDate(startMonth.minusMonths(integer), endMonth.minusMonths(integer), belongToUser(authService.getCurrentUser())) == null){
+            if( incomeRepository.sumOfIncomesByDate(startMonth.minusMonths(integer), endMonth.minusMonths(integer), authService.getCurrentUser()) == null){
                 value = (BigDecimal.valueOf(0));
             } else {
                 value = (
                         incomeRepository.sumOfIncomesByDate(
                                 startMonth.minusMonths(integer),
                                 endMonth.minusMonths(integer),
-                                belongToUser(authService.getCurrentUser())
+                                authService.getCurrentUser()
                         ).setScale(2, RoundingMode.HALF_UP));
             }
 
@@ -139,10 +139,10 @@ public class IncomeService  { //implements CrudService<IncomeDTO, Long>
         labelsIds.forEach(aLong -> {
             BigDecimal value;
             String key = tagService.get(aLong).getName();
-            if(incomeRepository.sumByTags_IdAndDateBetween(aLong, dateStart, dateEnd, belongToUser(authService.getCurrentUser())) == null) {
+            if(incomeRepository.sumByTags_IdAndDateBetween(aLong, dateStart, dateEnd, authService.getCurrentUser()) == null) {
                 value = BigDecimal.valueOf(0);
             } else  {
-                value = incomeRepository.sumByTags_IdAndDateBetween(aLong, dateStart, dateEnd, belongToUser(authService.getCurrentUser())).setScale(2, RoundingMode.HALF_UP);
+                value = incomeRepository.sumByTags_IdAndDateBetween(aLong, dateStart, dateEnd, authService.getCurrentUser()).setScale(2, RoundingMode.HALF_UP);
             }
             output.put(key, value);
         });
@@ -152,10 +152,10 @@ public class IncomeService  { //implements CrudService<IncomeDTO, Long>
     }
 
     public LocalDateTime getFirstEntryByDate(){
-        return incomeRepository.findFirstDate(belongToUser(authService.getCurrentUser()));
+        return incomeRepository.findFirstDate(authService.getCurrentUser());
     }
     public List<Integer> getYears(){
-        Integer minYear = incomeRepository.findFirstDate(belongToUser(authService.getCurrentUser())).getYear();
+        Integer minYear = incomeRepository.findFirstDate(authService.getCurrentUser()).getYear();
         Integer maxYear = LocalDateTime.now().getYear();
         List<Integer> listOfUsedYears = new ArrayList<>();
         for (int i = minYear; i < maxYear+1; i++) {
@@ -181,10 +181,10 @@ public class IncomeService  { //implements CrudService<IncomeDTO, Long>
                 LocalDateTime initial = LocalDateTime.of(year,month,1,0,0);
                 LocalDateTime dateStart = initial.withDayOfMonth(1);
                 LocalDateTime dateEnd = initial.withDayOfMonth(initial.getMonth().length(LocalDate.of(year,month,1).isLeapYear()));
-                if(incomeRepository.sumByTags_IdAndDateBetween(aLong, dateStart, dateEnd, belongToUser(authService.getCurrentUser())) == null) {
+                if(incomeRepository.sumByTags_IdAndDateBetween(aLong, dateStart, dateEnd, authService.getCurrentUser()) == null) {
                     value.add(BigDecimal.valueOf(0))  ;
                 } else  {
-                    value.add(incomeRepository.sumByTags_IdAndDateBetween(aLong, dateStart, dateEnd, belongToUser(authService.getCurrentUser())).setScale(2, RoundingMode.HALF_UP));
+                    value.add(incomeRepository.sumByTags_IdAndDateBetween(aLong, dateStart, dateEnd, authService.getCurrentUser()).setScale(2, RoundingMode.HALF_UP));
                 }
             });
 

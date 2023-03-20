@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import pl.finansepal.controller.dto.UserOptionsDTO;
-import pl.finansepal.controller.mapper.IncomeMapper;
 import pl.finansepal.controller.mapper.UserMapper;
 import pl.finansepal.controller.mapper.UserOptionsMapper;
 import pl.finansepal.model.UserOptions;

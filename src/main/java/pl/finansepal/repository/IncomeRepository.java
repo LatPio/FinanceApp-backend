@@ -24,14 +24,15 @@ public interface IncomeRepository extends JpaRepository<Income, Long> , JpaSpeci
 
     Optional<Void> deleteByIdAndUser(Long id, User user);
 
-    @Query("select sum(amount) from Income where date between ?1 and ?2")
-    BigDecimal sumOfIncomesByDate(LocalDateTime startDate, LocalDateTime endDate, Specification<Income> incomeSpecification);
 
-    @Query("select sum(i.amount) from Income i inner join i.tags tags where tags.id = ?1 and i.date between ?2 and ?3")
-    BigDecimal sumByTags_IdAndDateBetween(Long id, LocalDateTime dateStart, LocalDateTime dateEnd, Specification<Income> incomeSpecification);
+    @Query(value = "select sum(i.amount) from Income i where i.date between ?1 and ?2 and i.user = ?3")
+    BigDecimal sumOfIncomesByDate(LocalDateTime startDate, LocalDateTime endDate, User user);
 
-    @Query("select min(i.date) from Income i")
-    LocalDateTime findFirstDate(Specification<Income> incomeSpecification);
+    @Query("select sum(i.amount) from Income i inner join i.tags tags where tags.id = ?1 and i.date between ?2 and ?3 and i.user = ?4")
+    BigDecimal sumByTags_IdAndDateBetween(Long id, LocalDateTime dateStart, LocalDateTime dateEnd, User user);
+
+    @Query("select min(i.date) from Income i where i.user = ?1")
+    LocalDateTime findFirstDate(User user);
 
 
 }

@@ -94,7 +94,7 @@ public class ExpenseService  { //implements CrudService<ExpenseDTO, Long>
     }
 
     public BigDecimal getAmountByDate(LocalDateTime startDate, LocalDateTime endDate) {
-        return expenseRepository.sumOfExpenseByDate(startDate, endDate, ExpenseSpecification.belongToUser(authService.getCurrentUser()) );
+        return expenseRepository.sumOfExpenseByDate(startDate, endDate, authService.getCurrentUser() );
     }
 
     public Map<String, BigDecimal> getMonthlyAmountsFromLast(Integer numbersOfLastMonth){
@@ -107,14 +107,14 @@ public class ExpenseService  { //implements CrudService<ExpenseDTO, Long>
         Stream.iterate(numbersOfLastMonth , n-> n-1).limit(numbersOfLastMonth+1).forEach(integer-> {
             String key = LocalDateTime.now().minusMonths(integer).format(DateTimeFormatter.ofPattern("yyyy - MM"));
             BigDecimal value;
-            if( expenseRepository.sumOfExpenseByDate(startMonth.minusMonths(integer), endMonth.minusMonths(integer), ExpenseSpecification.belongToUser(authService.getCurrentUser())) == null){
+            if( expenseRepository.sumOfExpenseByDate(startMonth.minusMonths(integer), endMonth.minusMonths(integer), authService.getCurrentUser()) == null){
                 value = (BigDecimal.valueOf(0));
             } else {
                 value = (
                         expenseRepository.sumOfExpenseByDate(
                                 startMonth.minusMonths(integer),
                                 endMonth.minusMonths(integer),
-                                ExpenseSpecification.belongToUser(authService.getCurrentUser())
+                                authService.getCurrentUser()
                         ).setScale(2, RoundingMode.HALF_UP));
             }
             output.put(key,value);
@@ -136,10 +136,10 @@ public class ExpenseService  { //implements CrudService<ExpenseDTO, Long>
         labelsIds.forEach(aLong -> {
             BigDecimal value;
             String key = tagService.get(aLong).getName();
-            if(expenseRepository.sumByTags_IdAndDateBetween(aLong, dateStart, dateEnd, belongToUser(authService.getCurrentUser())) == null) {
+            if(expenseRepository.sumByTags_IdAndDateBetween(aLong, dateStart, dateEnd, authService.getCurrentUser()) == null) {
                 value = BigDecimal.valueOf(0);
             } else  {
-                value = expenseRepository.sumByTags_IdAndDateBetween(aLong, dateStart, dateEnd, belongToUser(authService.getCurrentUser())).setScale(2, RoundingMode.HALF_UP);
+                value = expenseRepository.sumByTags_IdAndDateBetween(aLong, dateStart, dateEnd, authService.getCurrentUser()).setScale(2, RoundingMode.HALF_UP);
             }
             output.put(key, value);
         });
@@ -165,10 +165,10 @@ public class ExpenseService  { //implements CrudService<ExpenseDTO, Long>
                 LocalDateTime initial = LocalDateTime.of(year, month, 1, 0, 0);
                 LocalDateTime dateStart = initial.withDayOfMonth(1);
                 LocalDateTime dateEnd = initial.withDayOfMonth(initial.getMonth().length(LocalDate.of(year, month, 1).isLeapYear()));
-                if (expenseRepository.sumByTags_IdAndDateBetween(aLong, dateStart, dateEnd, belongToUser(authService.getCurrentUser())) == null) {
+                if (expenseRepository.sumByTags_IdAndDateBetween(aLong, dateStart, dateEnd, authService.getCurrentUser()) == null) {
                     value.add(BigDecimal.valueOf(0));
                 } else {
-                    value.add(expenseRepository.sumByTags_IdAndDateBetween(aLong, dateStart, dateEnd, belongToUser(authService.getCurrentUser())).setScale(2, RoundingMode.HALF_UP));
+                    value.add(expenseRepository.sumByTags_IdAndDateBetween(aLong, dateStart, dateEnd, authService.getCurrentUser()).setScale(2, RoundingMode.HALF_UP));
                 }
             });
             output.put(key, value);
